@@ -19,5 +19,10 @@ class Line extends Model
         'stateitem',
     ];
 
+    public function scopeActive($query)
+    {
+        return $query->where('stateitem', '=', 1);
+    }
+
 
 }

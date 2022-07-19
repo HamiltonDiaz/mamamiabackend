@@ -16,5 +16,13 @@ class SubLine extends Model
         'descrip',
         'image',
         'stateitem',
+        'lineid',
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('stateitem', '=', 1);
+    }
+
+
 }

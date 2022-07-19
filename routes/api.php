@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LineController;
+use App\Http\Controllers\SubLineController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post("/register",[AuthController::class,'register']);
 Route::post("/login",[AuthController::class,'login']);
+
+Route::/*middleware('auth:sanctum')->*/prefix('lineas')->group(function () {
+    Route::get("/",[LineController::class,'index']);
+    Route::post("/crear",[LineController::class,'store']);
+});
+
+Route::/*middleware('auth:sanctum')->*/prefix('sublineas')->group(function () {
+    Route::get("/",[SubLineController::class,'index']);
+    Route::post("/crear",[SubLineController::class,'store']);
+});
