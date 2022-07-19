@@ -19,7 +19,12 @@ class Line extends Model
         'stateitem',
     ];
 
-    public function scopeActive($query)
+    public function scopeAllitems($query)
+    {
+        return $query->where('stateitem', '!=', 3);
+    }
+
+    public function scopeActiveitems($query)
     {
         return $query->where('stateitem', '=', 1);
     }
