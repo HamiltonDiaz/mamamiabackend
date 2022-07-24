@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Line;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -17,17 +18,19 @@ class LineController extends Controller
     public function index()
     {
         $lines = Line::select("id", "name", "descrip", "image")->orderBy("name", "asc")->allitems()->get();
-        return response()->json(
-            $lines,
-        );
+        return response()->json([
+            'success'=>true,
+            "data"=>$lines,
+        ],200);
     }
 
     public function findActive()
     {
         $lines = Line::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->get();
-        return response()->json(
-            $lines,
-        );
+        return response()->json([
+            'success'=>true,
+            "data"=>$lines,
+        ],200);
     }
     public function create()
     {
@@ -47,9 +50,11 @@ class LineController extends Controller
                 'message' => $msg,
                 'alert-type' => $alertType
             );
-            return response()->json(
-                $notification,
-            );
+            return response()->json([
+                "success"=>false,
+                "msg"=>$notification,
+                "data"=>[],
+            ]);
         }
 
         $descrip = "";
@@ -75,9 +80,11 @@ class LineController extends Controller
                 'message' => $msg,
                 'alert-type' => $alertType
             );
-            return response()->json(
-                $notification,
-            );
+            return response()->json([
+                "success"=>false,
+                "msg"=>$notification,
+                "data"=>[],
+            ]);
         }
         $notification = array(
             'message' => $msg,
@@ -85,8 +92,9 @@ class LineController extends Controller
         );
         return response()->json(
             [
-                $notification,
-                $line
+                "succes"=>true,
+                "msg"=>$notification,
+                "data"=>$line
             ]
         );
     }
@@ -137,17 +145,21 @@ class LineController extends Controller
                 'message' => $msg,
                 'alert-type' => $alertType
             );
-            return response()->json(
-                $notification,
-            );
+            return response()->json([
+                "success"=>false,
+                "msg"=>$notification,
+                "data"=>[],
+            ]);
         }
         $notification = array(
             'message' => $msg,
             'alert-type' => $alertType,
         );
-        return response()->json(
-            $notification,
-        );
+        return response()->json([
+            "success"=>true,
+            "msg"=>$notification,
+            "data"=>[],
+        ]);
     }
 
     public function destroy($id)
