@@ -17,7 +17,8 @@ class LineController extends Controller
 
     public function index()
     {
-        $lines = Line::select("id", "name", "descrip", "image")->orderBy("name", "asc")->allitems()->get();
+        //https://www.latirus.com/blog/2020/11/01/storage-link-en-hosting-compartido-laravel-symlink/
+        $lines = Line::select("id", "name", "descrip", "image","stateitem")->orderBy("name", "asc")->allitems()->get();
         return response()->json([
             'success'=>true,
             "data"=>$lines,
@@ -39,7 +40,9 @@ class LineController extends Controller
 
     public function store(Request $request)
     {
+
         //Validar que sea una imagen
+        // dd($request->input('image'));
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/img');
             $nombreImg = $request->file('image')->hashName();
@@ -92,7 +95,7 @@ class LineController extends Controller
         );
         return response()->json(
             [
-                "succes"=>true,
+                "success"=>true,
                 "msg"=>$notification,
                 "data"=>$line
             ]
@@ -128,8 +131,7 @@ class LineController extends Controller
         }
 
         $active = $request->input('stateitem');
-        $alertType = "success";
-        $msg = "Modificado exitosamente!\\n";
+        $msg = "¡Modificado exitosamente!";
 
         if ($request->input('name') && $active && $nombreImg) {
             Line::whereId($request->input('id'))->update([
@@ -139,47 +141,35 @@ class LineController extends Controller
                 'stateitem' => $active,
             ]);
         } else {
-            $alertType = "error";
-            $msg = "¡Error al modificar el registro!\\n";
-            $notification = array(
-                'message' => $msg,
-                'alert-type' => $alertType
-            );
+            $msg = "¡Error al modificar el registro!";
             return response()->json([
                 "success"=>false,
-                "msg"=>$notification,
-                "data"=>[],
+                "msg"=>$msg,
             ]);
         }
-        $notification = array(
-            'message' => $msg,
-            'alert-type' => $alertType,
-        );
         return response()->json([
             "success"=>true,
-            "msg"=>$notification,
-            "data"=>[],
+            "msg"=>$msg,
         ]);
     }
 
     public function destroy($id)
     {
-        $alertType = "success";
-        $msg = "Elimnado exitosamente!\\n";
-
+        $msg = "¡Elimnado exitosamente!";
+        $success = true;
         if ($id) {
             Line::whereId($id)->update([
                 'stateitem' => 3,
             ]);
         } else {
-            $alertType = "error";
-            $msg = "¡Error al eliminar!\\n";
+            $success = false;
+            $msg = "¡Error al eliminar!";
         }
 
         return response()->json(
             [
-                $alertType,
-                $msg,
+                "success"=>$success,
+                "msg"=>$msg,
             ]
         );
     }

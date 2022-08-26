@@ -5,6 +5,7 @@ use App\Http\Controllers\LineController;
 use App\Http\Controllers\SubLineController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +39,11 @@ Route::/*middleware('auth:sanctum')->*/prefix('sublineas')->group(function () {
     Route::get("/",[SubLineController::class,'index']);
     Route::post("/crear",[SubLineController::class,'store']);
 });
+
+
+
+Route::get('/routeImg', function (Request $request) {
+    // return Storage::url("2gyRCOT4GPMm7VnGadh0vfca6YhiQEgPkKW3Q81Z.jpg");
+    return storage_path() ;
+});
+
