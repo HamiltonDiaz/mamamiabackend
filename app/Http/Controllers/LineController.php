@@ -106,14 +106,11 @@ class LineController extends Controller
                 "data"=>[],
             ]);
         }
-        $notification = array(
-            'message' => $msg,
-            'alert-type' => $alertType
-        );
+
         return response()->json(
             [
                 "success"=>true,
-                "msg"=>$notification,
+                "msg"=>$msg,
                 "data"=>$line
             ]
         );
