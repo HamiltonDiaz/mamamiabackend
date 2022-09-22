@@ -23,5 +23,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RoleSeeder::class);
         $this->call(StateItemSeeder::class);
+        $this->call(LineSeeder::class);
+        $this->call(SubLineSeeder::class);
+
     }
 }

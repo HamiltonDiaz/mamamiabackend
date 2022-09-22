@@ -18,7 +18,7 @@ class LineController extends Controller
     public function index()
     {
         //https://www.latirus.com/blog/2020/11/01/storage-link-en-hosting-compartido-laravel-symlink/
-        $lines = Line::select("id", "name", "descrip", "image","stateitem")->orderBy("name", "asc")->allitems()->get();
+        $lines = Line::select()->orderBy("name", "asc")->allitems()->get();
         return response()->json([
             'success'=>true,
             "data"=>$lines,

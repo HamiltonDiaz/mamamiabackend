@@ -19,7 +19,12 @@ class SubLine extends Model
         'lineid',
     ];
 
-    public function scopeActive($query)
+    public function scopeAllitemsjoin($query)
+    {
+        return $query->where('sub_lines.stateitem', '!=', 3);
+    }
+
+    public function scopeActiveitems($query)
     {
         return $query->where('stateitem', '=', 1);
     }

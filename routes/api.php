@@ -35,9 +35,9 @@ Route::/*middleware('auth:sanctum')->*/prefix('line')->group(function () {
 Route::get("/line/active",[LineController::class,'findActive']);
 
 //sublineas
-Route::/*middleware('auth:sanctum')->*/prefix('sublineas')->group(function () {
+Route::/*middleware('auth:sanctum')->*/prefix('sublines')->group(function () {
     Route::get("/",[SubLineController::class,'index']);
-    Route::post("/crear",[SubLineController::class,'store']);
+    Route::post("/create",[SubLineController::class,'store']);
 });
 
 
