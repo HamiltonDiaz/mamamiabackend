@@ -38,8 +38,25 @@ class LineController extends Controller
         //
     }
 
+    public function findByName($name){
+        $findname= Line::where('name', $name)->exists();
+        return $findname;
+    }
+    
+
     public function store(Request $request)
     {
+
+        //valida que no esté duplicada la linea
+        if ($this->findByName($request->input('name'))) {
+            $alertType = "error";
+            $msg = "¡Ya existe un registro con este nombre!";
+            return response()->json([
+                "success"=>false,
+                "msg"=>$msg,
+                "data"=>[],
+            ]);
+        } 
 
         //Validar que sea una imagen
         // dd($request->input('image'));
