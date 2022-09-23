@@ -105,6 +105,8 @@ class SubLineController extends Controller
 
     public function update(Request $request, SubLine $subLine)
     {
+
+
         if($request->input('lineid')=="" or$request->input('lineid')==null ){
             $msg = "¡Error al modificar el registro!";
             return response()->json([
@@ -112,6 +114,26 @@ class SubLineController extends Controller
                 "msg"=>$msg,
             ]);
         }
+
+        $nameold=SubLine::select("name")->where("id","=",$request->input('id'))->first();
+        $lineidold=SubLine::select("lineid")->where("id","=",$request->input('id'))->first();
+        // dd($lineidold->lineid);
+        if ($nameold->name!=$request->input('name') or $lineidold->lineid!=$request->input('lineid')){
+            $totalSubline = SubLine::where([
+                ["name", "=", $request->input('name')], 
+                ["lineid", "=", $request->input('lineid')]])
+                ->count();
+            if ($totalSubline>0){
+                $msg = "¡Ya existe un registro con este nombre!";
+                return response()->json([
+                    "success"=>false,
+                    "msg"=> $msg,
+                ]);
+            }            
+        }
+        
+
+
 
         $descrip = "";
         if ($request->input('descrip')) {
@@ -150,8 +172,23 @@ class SubLineController extends Controller
         ]);
     }
 
-    public function destroy(SubLine $subLine)
+    public function destroy($id)
     {
-        //
+        $msg = "¡Elimnado exitosamente!";
+        $success = true;
+        if ($id) {
+            SubLine::whereId($id)->update([
+                'stateitem' => 3,
+            ]);
+        } else {
+            $success = false;
+            $msg = "¡Error al eliminar!";
+        }
+        return response()->json(
+            [
+                "success"=>$success,
+                "msg"=>$msg,
+            ]
+        );
     }
 }

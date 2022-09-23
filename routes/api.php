@@ -39,6 +39,7 @@ Route::/*middleware('auth:sanctum')->*/prefix('sublines')->group(function () {
     Route::get("/",[SubLineController::class,'index']);
     Route::post("/create",[SubLineController::class,'store']);
     Route::post("/update",[SubLineController::class,'update']);
+    Route::delete("/delete/{id}",[SubLineController::class,'destroy']);
 });
 
 
