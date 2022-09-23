@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SubLine;
 use App\Models\Line;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SubLineController extends Controller
 {
@@ -50,7 +51,6 @@ class SubLineController extends Controller
             $path = $request->file('image')->store('public/img');
             $nombreImg = $request->file('image')->hashName();
         } else {
-            $alertType = "error";
             $msg = "¡Imagen no válida!\\n";
             return response()->json([
                 "success"=>false,
@@ -105,7 +105,49 @@ class SubLineController extends Controller
 
     public function update(Request $request, SubLine $subLine)
     {
-        //
+        if($request->input('lineid')=="" or$request->input('lineid')==null ){
+            $msg = "¡Error al modificar el registro!";
+            return response()->json([
+                "success"=>false,
+                "msg"=>$msg,
+            ]);
+        }
+
+        $descrip = "";
+        if ($request->input('descrip')) {
+            $descrip = $request->input('descrip');
+        }
+
+        if ($request->hasFile('image')) {
+            Storage::disk('publicimg')->delete($request->input('imgold'));
+            $path = $request->file('image')->store('public/img');
+            $nombreImg = $request->file('image')->hashName();
+        } else {
+            $nombreImg = $request->input('imgold');
+        }
+
+        $active = $request->input('stateitem');
+        $msg = "¡Modificado exitosamente!";
+
+        if ($request->input('name') && $active && $nombreImg) {
+            SubLine::whereId($request->input('id'))->update([
+                'name' => $request->input('name'),
+                'descrip' => $descrip,
+                'image' => $nombreImg,
+                'stateitem' => $active,
+                'lineid' => $request->input('lineid'),
+            ]);
+        } else {
+            $msg = "¡Error al modificar el registro!";
+            return response()->json([
+                "success"=>false,
+                "msg"=>$msg,
+            ]);
+        }
+        return response()->json([
+            "success"=>true,
+            "msg"=>$msg,
+        ]);
     }
 
     public function destroy(SubLine $subLine)
