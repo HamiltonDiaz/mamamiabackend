@@ -15,12 +15,19 @@ class LineSeeder extends Seeder
      */
     public function run()
     {
-        $line = Line::create([
+        Line::create([
             'name' => "Camisetas",
             'descrip' => "Prenda de vestir para toda la familia",
             'image' => "imglinecamiseta.png",
             'stateitem' => 1,
         ]);
-        // $line->save();
+
+        Line::create([
+            'name' => "Vasos",
+            'descrip' => "Utensilios personalizados  para toda la familia",
+            'image' => "imglinecamiseta.png",
+            'stateitem' => 1,
+        ]);
+
     }
 }

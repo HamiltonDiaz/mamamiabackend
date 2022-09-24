@@ -20,7 +20,7 @@ class SubLineSeeder extends Seeder
             'descrip' => "Prenda de vestir para toda la familia",
             'image' => "imglinecamiseta.png",
             'stateitem' => 1,
-            'lineid'=>1,
+            'lineid'=>2,
         ]);
 
         $subline2 = SubLine::create([

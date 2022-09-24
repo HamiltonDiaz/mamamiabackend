@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\SubLineController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -42,10 +43,13 @@ Route::/*middleware('auth:sanctum')->*/prefix('sublines')->group(function () {
     Route::delete("/delete/{id}",[SubLineController::class,'destroy']);
 });
 
-
-
-Route::get('/routeImg', function (Request $request) {
-    // return Storage::url("2gyRCOT4GPMm7VnGadh0vfca6YhiQEgPkKW3Q81Z.jpg");
-    return storage_path() ;
+//productos
+Route::/*middleware('auth:sanctum')->*/prefix('products')->group(function () {
+    Route::get("/",[ProductController::class,'index']);
+    Route::post("/create",[ProductController::class,'store']);
+    Route::post("/update",[ProductController::class,'update']);
+    Route::delete("/delete/{id}",[ProductController::class,'destroy']);
 });
+
+
 

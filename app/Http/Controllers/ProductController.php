@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\SubLine;
+use App\Models\Line;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +16,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $lines=Line::select("id","name")->allitems()->get();
+        $sublines=SubLine::select("id","name")->activeitems()->get();
+        $products= Product::select("products.*","sln.name as namesubline","ln.id as idsline","ln.name as nameline")
+        // ->orderBy("products.name","asc")
+        ->allitemsjoin()
+        ->join("sub_lines as sln", "sublineid","=","sln.id")
+        ->join("lines as ln", "sln.id","=","ln.id")
+        ->get();
+        return response()->json([
+            'success'=>true,
+            "data"=>["lines"=>$lines,"sublines"=>$sublines,"products"=>$products],
+        ],200);
     }
 
     /**
