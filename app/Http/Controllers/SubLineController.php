@@ -34,6 +34,7 @@ class SubLineController extends Controller
 
     public function store(Request $request)
     {
+
         // dd($request);
         //valida que no esté duplicada la linea
         if ($this->findByName($request->input('name'))) {
@@ -63,6 +64,10 @@ class SubLineController extends Controller
         if ($request->input('descrip')) {
             $descrip = $request->input('descrip');
         }
+
+
+        //Validar que la linea no esté inactiva ... si está inactiva debe salir la alerta
+        //que se va mostrar como inactiva hasta que active la linea
 
         $msg = "¡Creado exitosamente!\\n";
 
@@ -106,6 +111,8 @@ class SubLineController extends Controller
     public function update(Request $request, SubLine $subLine)
     {
 
+    
+
 
         if($request->input('lineid')=="" or$request->input('lineid')==null ){
             $msg = "¡Error al modificar el registro!";
@@ -132,8 +139,9 @@ class SubLineController extends Controller
             }            
         }
         
-
-
+        //Validar que la linea no esté inactiva ... si está inactiva debe salir la alerta
+        //no debe dejar actualizar el estado activo/inactivo si la linea esta inactiva
+        //No es posible activar una sublinea si no está activa la linea
 
         $descrip = "";
         if ($request->input('descrip')) {
