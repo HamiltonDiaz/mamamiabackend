@@ -66,18 +66,24 @@ class SubLineController extends Controller
             $descrip = $request->input('descrip');
         }
 
-
         //Validar que la linea no esté inactiva ... si está inactiva debe salir la alerta
         //que se va mostrar como inactiva hasta que active la linea
 
-        $msg = "¡Creado exitosamente!\\n";
+        $msg = "¡Creado exitosamente!";
+        $stateLine= Line::select("stateitem")->where("id","=",$request->input('lineid'))->first();
+        $endState= $request->input('stateitem');
+        if ($stateLine->stateitem ==2){
+            $msg = $msg . " ...Estado: ¡Inactivo!";
+            $endState=2;
+            // dd($msg);
+        }
 
         if ($request->input('name')) {
             $line = SubLine::create([
                 'name' => $request->input('name'),
                 'descrip' => $descrip,
                 'image' => $nombreImg,
-                'stateitem' => $request->input('stateitem'),
+                'stateitem' => $endState,
                 'lineid' => $request->input('lineid'),
             ]);
             $line->save();
@@ -140,6 +146,16 @@ class SubLineController extends Controller
             }            
         }
         
+        $stateLine= Line::select("stateitem", "name")->where("id","=",$request->input('lineid'))->first();
+        
+        if ($stateLine->stateitem ==2){
+            $msg = 'El registro padre "' . $stateLine->name . '" se encuentra inactivo, no es posible activar este item.';
+            return response()->json([
+                "success"=>false,
+                "msg"=> $msg,
+            ]);
+        }
+
         //Validar que la linea no esté inactiva ... si está inactiva debe salir la alerta
         //no debe dejar actualizar el estado activo/inactivo si la linea esta inactiva
         //No es posible activar una sublinea si no está activa la linea
