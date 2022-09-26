@@ -16,8 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $lines=Line::select("id","name")->allitems()->get();
-        $sublines=SubLine::select("id","name")->activeitems()->get();
+        $lines=Line::select("id","name","stateitem as linestate")->allitems()->get();
+        $sublines=SubLine::select("id","name","stateitem as sublinestate")->allitems()->get();
         $products= Product::select("products.*","sln.name as namesubline","ln.id as idsline","ln.name as nameline")
         // ->orderBy("products.name","asc")
         ->allitemsjoin()

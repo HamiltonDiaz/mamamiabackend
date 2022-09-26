@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Line;
+use App\Models\SubLine;
+use App\Models\Product;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -175,6 +177,17 @@ class LineController extends Controller
             Line::whereId($id)->update([
                 'stateitem' => 3,
             ]);
+
+            SubLine::where("lineid","=",$id)->update([
+                'stateitem' => 3,
+            ]);
+
+            Product::join("sub_lines as sln", "products.sublineid","=","sln.id")
+            ->join("lines as ln", "sln.lineid","=", "ln.id")
+            ->where("sln.lineid","=",$id)->update([
+                'products.stateitem' => 3,
+            ]);
+
         } else {
             $success = false;
             $msg = "¡Error al eliminar!";

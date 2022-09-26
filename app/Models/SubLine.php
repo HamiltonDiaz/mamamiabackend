@@ -24,6 +24,11 @@ class SubLine extends Model
         return $query->where('sub_lines.stateitem', '!=', 3);
     }
 
+    public function scopeAllitems($query)
+    {
+        return $query->where('stateitem', '!=', 3);
+    }
+    
     public function scopeActiveitems($query)
     {
         return $query->where('stateitem', '=', 1);

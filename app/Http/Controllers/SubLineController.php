@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SubLine;
 use App\Models\Line;
+use App\Models\SubLine;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ class SubLineController extends Controller
 {
     public function index()
     {
-        $lines=Line::select("id","name")->allitems()->get();
+        $lines=Line::select("id","name", "stateitem as stateline")->allitems()->get();
         $sublines= SubLine::select("sub_lines.*","ln.name as nameline","ln.id as idline")
         ->orderBy("sub_lines.name","asc")
         ->allitemsjoin()
@@ -19,7 +20,7 @@ class SubLineController extends Controller
         ->get();
         return response()->json([
             'success'=>true,
-            "data"=>[$sublines,$lines],
+            "data"=>["sublines"=>$sublines,"lines"=>$lines],
         ],200);
     }
 
@@ -188,6 +189,12 @@ class SubLineController extends Controller
             SubLine::whereId($id)->update([
                 'stateitem' => 3,
             ]);
+
+            Product::where("sublineid","=",$id)->update([
+                'stateitem' => 3,
+            ]);
+
+
         } else {
             $success = false;
             $msg = "¡Error al eliminar!";
