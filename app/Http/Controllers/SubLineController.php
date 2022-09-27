@@ -28,18 +28,33 @@ class SubLineController extends Controller
     {
         //
     }
-    public function findByName($name){
-        $findname= SubLine::where('name', $name)->exists();
+    private function findDuplicateItem($name,$idsln){
+        $findname= SubLine::where([
+            ["name", $name], 
+            ["lineid", $idsln]])
+            ->exists();
         return $findname;
     }
 
     public function store(Request $request)
     {
-
         // dd($request);
-        //valida que no esté duplicada la linea
-        if ($this->findByName($request->input('name'))) {
-            $alertType = "error";
+        if($request->input('lineid')=="" or$request->input('lineid')==null ){
+            $msg = "¡Línea es requerida!";
+            return response()->json([
+                "success"=>false,
+                "msg"=>$msg,
+            ]);
+        }
+        if($request->input('name')=="" or$request->input('name')==null ){
+            $msg = "¡Nombre es requerido!";
+            return response()->json([
+                "success"=>false,
+                "msg"=>$msg,
+            ]);
+        }
+
+        if ($this->findDuplicateItem($request->input('name'),$request->input('lineid'))) {
             $msg = "¡Ya existe un registro con este nombre!";
             return response()->json([
                 "success"=>false,
@@ -47,13 +62,12 @@ class SubLineController extends Controller
                 "data"=>[],
             ]);
         }
-
         //Validar que sea una imagen
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('public/img');
             $nombreImg = $request->file('image')->hashName();
         } else {
-            $msg = "¡Imagen no válida!\\n";
+            $msg = "¡Imagen no válida!";
             return response()->json([
                 "success"=>false,
                 "msg"=>$msg,
@@ -66,41 +80,28 @@ class SubLineController extends Controller
             $descrip = $request->input('descrip');
         }
 
-        //Validar que la linea no esté inactiva ... si está inactiva debe salir la alerta
-        //que se va mostrar como inactiva hasta que active la linea
-
         $msg = "¡Creado exitosamente!";
         $stateLine= Line::select("stateitem")->where("id","=",$request->input('lineid'))->first();
         $endState= $request->input('stateitem');
         if ($stateLine->stateitem ==2){
             $msg = $msg . " ...Estado: ¡Inactivo!";
             $endState=2;
-            // dd($msg);
         }
 
-        if ($request->input('name')) {
-            $line = SubLine::create([
-                'name' => $request->input('name'),
-                'descrip' => $descrip,
-                'image' => $nombreImg,
-                'stateitem' => $endState,
-                'lineid' => $request->input('lineid'),
-            ]);
-            $line->save();
-        } else {
-            $msg = "¡Error al crear el registro!\\n";
-              return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
-                "data"=>[],
-            ]);
-        }
+        $registro = SubLine::create([
+            'name' => $request->input('name'),
+            'descrip' => $descrip,
+            'image' => $nombreImg,
+            'stateitem' => $endState,
+            'lineid' => $request->input('lineid'),
+        ]);
+        $registro->save();
 
         return response()->json(
             [
                 "success"=>true,
                 "msg"=>$msg,
-                "data"=>$line
+                "data"=>$registro
             ]
         );
     }
@@ -115,12 +116,8 @@ class SubLineController extends Controller
         //
     }
 
-    public function update(Request $request, SubLine $subLine)
+    public function update(Request $request)
     {
-
-    
-
-
         if($request->input('lineid')=="" or$request->input('lineid')==null ){
             $msg = "¡Error al modificar el registro!";
             return response()->json([
@@ -128,10 +125,8 @@ class SubLineController extends Controller
                 "msg"=>$msg,
             ]);
         }
-
         $nameold=SubLine::select("name")->where("id","=",$request->input('id'))->first();
         $lineidold=SubLine::select("lineid")->where("id","=",$request->input('id'))->first();
-        // dd($lineidold->lineid);
         if ($nameold->name!=$request->input('name') or $lineidold->lineid!=$request->input('lineid')){
             $totalSubline = SubLine::where([
                 ["name", "=", $request->input('name')], 
@@ -155,10 +150,6 @@ class SubLineController extends Controller
                 "msg"=> $msg,
             ]);
         }
-
-        //Validar que la linea no esté inactiva ... si está inactiva debe salir la alerta
-        //no debe dejar actualizar el estado activo/inactivo si la linea esta inactiva
-        //No es posible activar una sublinea si no está activa la linea
 
         $descrip = "";
         if ($request->input('descrip')) {
