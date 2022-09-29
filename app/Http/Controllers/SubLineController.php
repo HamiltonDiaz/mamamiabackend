@@ -143,7 +143,7 @@ class SubLineController extends Controller
         
         $stateLine= Line::select("stateitem", "name")->where("id","=",$request->input('lineid'))->first();
         
-        if ($stateLine->stateitem ==2){
+        if ($stateLine->stateitem ==2 and $request->input('stateitem')==1){
             $msg = 'El registro padre "' . $stateLine->name . '" se encuentra inactivo, no es posible activar este item.';
             return response()->json([
                 "success"=>false,

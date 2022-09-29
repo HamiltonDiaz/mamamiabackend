@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index()
     {
         $lines=Line::select("id","name","stateitem as linestate")->allitems()->get();
-        $sublines=SubLine::select("id","name","stateitem as sublinestate")->allitems()->get();
+        $sublines=SubLine::select("id","name","stateitem as sublinestate", "lineid")->allitems()->get();
         $products= Product::select(
             "products.*",
             "sln.name as namesubline","sln.id as idsubline",
