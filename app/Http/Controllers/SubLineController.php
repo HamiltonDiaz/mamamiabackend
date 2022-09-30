@@ -127,6 +127,7 @@ class SubLineController extends Controller
         }
         $nameold=SubLine::select("name")->where("id","=",$request->input('id'))->first();
         $lineidold=SubLine::select("lineid")->where("id","=",$request->input('id'))->first();
+
         if ($nameold->name!=$request->input('name') or $lineidold->lineid!=$request->input('lineid')){
             $totalSubline = SubLine::where([
                 ["name", "=", $request->input('name')], 
