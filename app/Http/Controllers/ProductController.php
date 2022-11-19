@@ -274,4 +274,25 @@ class ProductController extends Controller
             ]
         );
     }
+    public function singleProduct($id)    {
+        $msg = "";
+        $success = true;
+        if ($id) {
+            $product= Product::select("*")->whereId($id)->activeitems()->get()->first();
+            // dd($product);
+        } else {
+            $success = false;
+            $msg = "¡Registro no encontrado!";
+        }
+        return response()->json(
+            [
+                "success"=>$success,
+                "msg"=>$msg,
+                "data"=>$product
+            ]
+        );
+    }
+
+
+
 }
