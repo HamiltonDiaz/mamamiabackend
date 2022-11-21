@@ -27,7 +27,7 @@ Route::post("/register",[AuthController::class,'register']);
 Route::post("/login",[AuthController::class,'login']);
 
 //lineas
-Route::/*middleware('auth:sanctum')->*/prefix('line')->group(function () {
+Route::middleware('auth:sanctum')->prefix('line')->group(function () {
     Route::get("/",[LineController::class,'index']);
     Route::post("/create",[LineController::class,'store']);
     Route::post("/update",[LineController::class,'update']);
@@ -36,7 +36,7 @@ Route::/*middleware('auth:sanctum')->*/prefix('line')->group(function () {
 Route::get("/line/active",[LineController::class,'findActive']);
 
 //sublineas
-Route::/*middleware('auth:sanctum')->*/prefix('sublines')->group(function () {
+Route::middleware('auth:sanctum')->prefix('sublines')->group(function () {
     Route::get("/",[SubLineController::class,'index']);
     Route::post("/create",[SubLineController::class,'store']);
     Route::post("/update",[SubLineController::class,'update']);
@@ -44,13 +44,17 @@ Route::/*middleware('auth:sanctum')->*/prefix('sublines')->group(function () {
 });
 
 //productos
-Route::/*middleware('auth:sanctum')->*/prefix('products')->group(function () {
+Route::middleware('auth:sanctum')->prefix('products')->group(function () {
     Route::get("/",[ProductController::class,'index']);
     Route::post("/create",[ProductController::class,'store']);
     Route::post("/update",[ProductController::class,'update']);
     Route::delete("/delete/{id}",[ProductController::class,'destroy']);
-    Route::get("/{id}",[ProductController::class,'singleProduct']);
-});
 
+});
+//Productos cliente
+Route::prefix('products-client')->group(function () {
+    Route::get("/{id}",[ProductController::class,'singleProduct']);
+    Route::get("/listAll/{lineid}",[ProductController::class,'listProductsClient']);
+});
 
 

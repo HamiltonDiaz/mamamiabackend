@@ -13,22 +13,25 @@ class ProductController extends Controller
 
     public function index()
     {
-        $lines=Line::select("id","name","stateitem as linestate")->allitems()->get();
-        $sublines=SubLine::select("id","name","stateitem as sublinestate", "lineid")->allitems()->get();
-        $products= Product::select(
+        $lines = Line::select("id", "name", "stateitem as linestate")->allitems()->get();
+        $sublines = SubLine::select("id", "name", "stateitem as sublinestate", "lineid")->allitems()->get();
+        $products = Product::select(
             "products.*",
-            "sln.name as namesubline","sln.id as idsubline",
-            "ln.id as idline","ln.name as nameline")
-        // ->orderBy("products.name","asc")
-        ->allitemsjoin()
-        ->join("sub_lines as sln", "products.sublineid","=","sln.id")
-        ->join("lines as ln", "sln.lineid","=","ln.id")
-        // ->toSql();
-        ->get();
+            "sln.name as namesubline",
+            "sln.id as idsubline",
+            "ln.id as idline",
+            "ln.name as nameline"
+        )
+            // ->orderBy("products.name","asc")
+            ->allitemsjoin()
+            ->join("sub_lines as sln", "products.sublineid", "=", "sln.id")
+            ->join("lines as ln", "sln.lineid", "=", "ln.id")
+            // ->toSql();
+            ->get();
         return response()->json([
-            'success'=>true,
-            "data"=>["lines"=>$lines,"sublines"=>$sublines,"products"=>$products],
-        ],200);
+            'success' => true,
+            "data" => ["lines" => $lines, "sublines" => $sublines, "products" => $products],
+        ], 200);
     }
 
     /**
@@ -41,10 +44,12 @@ class ProductController extends Controller
         //
     }
 
-    private function findDuplicateItem($name,$idsln){
-        $findname= Product::where([
-            ["name", $name], 
-            ["sublineid", $idsln]])
+    private function findDuplicateItem($name, $idsln)
+    {
+        $findname = Product::where([
+            ["name", $name],
+            ["sublineid", $idsln]
+        ])
             ->exists();
         return $findname;
     }
@@ -52,35 +57,35 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        if($request->input('sublineid')=="" or$request->input('sublineid')==null ){
+        if ($request->input('sublineid') == "" or $request->input('sublineid') == null) {
             $msg = "¡Sublinea es requerida!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
-        if($request->input('name')=="" or$request->input('name')==null ){
+        if ($request->input('name') == "" or $request->input('name') == null) {
             $msg = "¡Nombre es requerido!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
 
-        if($request->input('price')=="" or$request->input('price')==null ){
+        if ($request->input('price') == "" or $request->input('price') == null) {
             $msg = "¡Precio es requerido!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
 
         //valida que no esté duplicado el registro
-        if ($this->findDuplicateItem($request->input('name'),$request->input('sublineid'))) {
+        if ($this->findDuplicateItem($request->input('name'), $request->input('sublineid'))) {
             $msg = "¡Ya existe un registro con este nombre!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
         //Validar que sea una imagen
@@ -90,9 +95,9 @@ class ProductController extends Controller
         } else {
             $msg = "¡Imagen no válida!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
-                "data"=>[],
+                "success" => false,
+                "msg" => $msg,
+                "data" => [],
             ]);
         }
 
@@ -102,33 +107,33 @@ class ProductController extends Controller
         }
 
         $msg = "¡Creado exitosamente!";
-        
+
         //Se cambia el estado si la linea o la sublinea está inactiva
-        $stateLine= Subline::select("ln.stateitem as stateline")
-                    ->join("lines as ln", "sub_lines.lineid","=","ln.id")
-                    ->where("sub_lines.id","=",$request->input('sublineid'))->first();
-        $stateSubline= SubLine::select("stateitem as statesubline")->where("id","=",$request->input('sublineid'))->first();
-        $endState= $request->input('stateitem');
-        if ($stateLine->stateline ==2 or $stateSubline->statesubline==2){
+        $stateLine = Subline::select("ln.stateitem as stateline")
+            ->join("lines as ln", "sub_lines.lineid", "=", "ln.id")
+            ->where("sub_lines.id", "=", $request->input('sublineid'))->first();
+        $stateSubline = SubLine::select("stateitem as statesubline")->where("id", "=", $request->input('sublineid'))->first();
+        $endState = $request->input('stateitem');
+        if ($stateLine->stateline == 2 or $stateSubline->statesubline == 2) {
             $msg = $msg . " ...Estado: ¡Inactivo!";
-            $endState=2;
+            $endState = 2;
         }
 
         $registro = Product::create([
             'name' => $request->input('name'),
             'descrip' => $descrip,
             'image' => $nombreImg,
-            'price'=>$request->input('price'),
+            'price' => $request->input('price'),
             'stateitem' => $endState,
             'sublineid' => $request->input('sublineid'),
         ]);
         $registro->save();
-        
+
         return response()->json(
             [
-                "success"=>true,
-                "msg"=>$msg,
-                "data"=>$registro
+                "success" => true,
+                "msg" => $msg,
+                "data" => $registro
             ]
         );
     }
@@ -147,51 +152,52 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
 
-        if($request->input('sublineid')=="" or$request->input('sublineid')==null ){
+        if ($request->input('sublineid') == "" or $request->input('sublineid') == null) {
             $msg = "¡Sublinea es requerida!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
-        if($request->input('lineid')=="" or$request->input('lineid')==null ){
+        if ($request->input('lineid') == "" or $request->input('lineid') == null) {
             $msg = "¡Línea es requerida!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
-        if($request->input('price')=="" or$request->input('price')==null ){
+        if ($request->input('price') == "" or $request->input('price') == null) {
             $msg = "Precio es requerido!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
-        
-        if($request->input('name')=="" or$request->input('name')==null ){
+
+        if ($request->input('name') == "" or $request->input('name') == null) {
             $msg = "Nombre es requerido!";
             return response()->json([
-                "success"=>false,
-                "msg"=>$msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
 
         //Valida que no exista un producto con la misma linea, sublinea o producto.
-        $sublineidold=Product::select("sublineid")->where("id","=",$request->input('id'))->first();
-        $lineidold=SubLine::select("lineid")->where("id","=",$sublineidold)->first();
-        $nameold=Product::select("name")->where("id","=",$request->input('id'))->first();
-        if ($nameold->name != $request->input('name') or 
-            $sublineidold->sublineid != $request->input('sublineid') or 
-            $lineidold->lineid != $request->input('lineid')) 
-        {
-            
-            $totalProduct= Product::join("sub_lines as sl", "products.sublineid","=","sl.id")
-                            ->join("lines as ln", "sl.lineid","ln.id")
-                            ->where("products.name","=",$request->input('name'))
-                            ->where("products.sublineid","=",$request->input('sublineid'))
-                            ->where("ln.id","=",$request->input('sublineid'))
-                            ->count();
+        $sublineidold = Product::select("sublineid")->where("id", "=", $request->input('id'))->first();
+        $lineidold = SubLine::select("lineid")->where("id", "=", $sublineidold)->first();
+        $nameold = Product::select("name")->where("id", "=", $request->input('id'))->first();
+        if (
+            $nameold->name != $request->input('name') or
+            $sublineidold->sublineid != $request->input('sublineid') or
+            $lineidold->lineid != $request->input('lineid')
+        ) {
+
+            $totalProduct = Product::join("sub_lines as sl", "products.sublineid", "=", "sl.id")
+                ->join("lines as ln", "sl.lineid", "ln.id")
+                ->where("products.name", "=", $request->input('name'))
+                ->where("products.sublineid", "=", $request->input('sublineid'))
+                ->where("ln.id", "=", $request->input('sublineid'))
+                ->count();
             if ($totalProduct > 0) {
                 //dd("ingresó");
                 $msg = "¡Ya existe un registro con este nombre!";
@@ -202,26 +208,26 @@ class ProductController extends Controller
             }
             // dd("no ingresó");
         }
-        
-        $stateLine= Line::select("stateitem", "name")->where("id","=",$request->input('lineid'))->first();        
-        if ($stateLine->stateitem ==2 and $request->input('stateitem')==1){
+
+        $stateLine = Line::select("stateitem", "name")->where("id", "=", $request->input('lineid'))->first();
+        if ($stateLine->stateitem == 2 and $request->input('stateitem') == 1) {
             $msg = 'La línea "' . $stateLine->name . '" se encuentra inactiva, no es posible activar este item.';
             return response()->json([
-                "success"=>false,
-                "msg"=> $msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
 
 
-        $stateSubline= Subline::select("stateitem", "name")->where("id","=",$request->input('sublineid'))->first();
-        if ($stateSubline->stateitem ==2 and $request->input('stateitem')==1){
+        $stateSubline = Subline::select("stateitem", "name")->where("id", "=", $request->input('sublineid'))->first();
+        if ($stateSubline->stateitem == 2 and $request->input('stateitem') == 1) {
             $msg = 'La Sublinea "' . $stateSubline->name . '" se encuentra inactiva, no es posible activar este item.';
             return response()->json([
-                "success"=>false,
-                "msg"=> $msg,
+                "success" => false,
+                "msg" => $msg,
             ]);
         }
-        
+
 
 
         $descrip = "";
@@ -236,7 +242,7 @@ class ProductController extends Controller
         } else {
             $nombreImg = $request->input('imgold');
         }
-        
+
         $active = $request->input('stateitem');
         $msg = "¡Modificado exitosamente!";
 
@@ -269,16 +275,17 @@ class ProductController extends Controller
         }
         return response()->json(
             [
-                "success"=>$success,
-                "msg"=>$msg,
+                "success" => $success,
+                "msg" => $msg,
             ]
         );
     }
-    public function singleProduct($id)    {
+    public function singleProduct($id)
+    {
         $msg = "";
         $success = true;
         if ($id) {
-            $product= Product::select("*")->whereId($id)->activeitems()->get()->first();
+            $product = Product::select("*")->whereId($id)->activeitems()->get()->first();
             // dd($product);
         } else {
             $success = false;
@@ -286,13 +293,73 @@ class ProductController extends Controller
         }
         return response()->json(
             [
-                "success"=>$success,
-                "msg"=>$msg,
-                "data"=>$product
+                "success" => $success,
+                "msg" => $msg,
+                "data" => $product
             ]
         );
     }
 
 
+    public function listProductsClient($lineid)
+    {
+    
+        $lines = Line::select("id", "name", "stateitem as linestate")->activeitems()->get();
+        $success=true;
+        $msg="";
+    
+        if ($lineid>0){
+            $products = Product::select(
+                "products.*",
+                "sln.name as namesubline",
+                "sln.id as idsubline",
+                "ln.id as idline",
+                "ln.name as nameline",
+                "ln.stateitem as linestate",
+                "sln.stateitem as sublinestate",
+            )
+                ->orderBy("products.name","asc")
+                ->join("sub_lines as sln", "products.sublineid", "=", "sln.id")
+                ->join("lines as ln", "sln.lineid", "=", "ln.id")
+                ->where("products.stateitem", "=", "1")
+                ->where("ln.stateitem", "=", "1")
+                ->where("sln.stateitem", "=", "1")
+                ->where("ln.id", "=", $lineid)
+                // ->toSql();
+                ->paginate(3);
+        }
+        if ($lineid==0){
+            //traer todos los productos sin importar la linea
+            $products = Product::select(
+                "products.*",
+                "sln.name as namesubline",
+                "sln.id as idsubline",
+                "ln.id as idline",
+                "ln.name as nameline",
+                "ln.stateitem as linestate",
+                "sln.stateitem as sublinestate",
+            )
+                ->orderBy("products.name","asc")
+                ->join("sub_lines as sln", "products.sublineid", "=", "sln.id")
+                ->join("lines as ln", "sln.lineid", "=", "ln.id")
+                ->where("products.stateitem", "=", "1")
+                ->where("ln.stateitem", "=", "1")
+                ->where("sln.stateitem", "=", "1")
+                ->paginate(3);
+        }
 
+
+
+        if ($products==[]){
+            $success=false;
+        }
+        
+        return response()->json(
+            [
+                "success" => $success,
+                "msg" => $msg,
+                "data" => ["products" => $products, "lines" => $lines]
+            ]
+        );
+    }
 }
