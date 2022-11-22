@@ -34,16 +34,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
+ 
     private function findDuplicateItem($name, $idsln)
     {
         $findname = Product::where([
@@ -138,17 +129,6 @@ class ProductController extends Controller
         );
     }
 
-
-    public function show(Product $product)
-    {
-        //
-    }
-
-    public function edit(Product $product)
-    {
-        //
-    }
-
     public function update(Request $request, Product $product)
     {
 
@@ -218,7 +198,6 @@ class ProductController extends Controller
             ]);
         }
 
-
         $stateSubline = Subline::select("stateitem", "name")->where("id", "=", $request->input('sublineid'))->first();
         if ($stateSubline->stateitem == 2 and $request->input('stateitem') == 1) {
             $msg = 'La Sublinea "' . $stateSubline->name . '" se encuentra inactiva, no es posible activar este item.';
@@ -227,8 +206,6 @@ class ProductController extends Controller
                 "msg" => $msg,
             ]);
         }
-
-
 
         $descrip = "";
         if ($request->input('descrip')) {
@@ -301,11 +278,17 @@ class ProductController extends Controller
     }
 
 
-    public function listProductsClient(Request $request)
+    public function listProductsClient($linesid)
     {
-
-        $lines = Line::select("id", "name", "stateitem as linestate")->activeitems()->get();
+        // dd($linesid);
+        $lines = Line::select("id", "name", "stateitem as linestate")->activeitems()->get()->toArray();
         $products=array();
+        $criterios=explode(",",$linesid);
+        if ($criterios==[0]){
+            foreach($lines as $ln){
+                array_push($criterios, $ln["id"]);
+            }
+        }        
         $success=true;
         $msg="";
     
@@ -325,8 +308,8 @@ class ProductController extends Controller
                 ->where("products.stateitem", "=", "1")
                 ->where("ln.stateitem", "=", "1")
                 ->where("sln.stateitem", "=", "1")
-                // ->whereIn("ln.id", "=", $request->linesid)
-                ->whereIn("ln.id", "=", [0,1,2,3,4,5])
+                // ->whereIn("ln.id", $request->linesid)
+                ->whereIn("ln.id", $criterios)
                 // ->toSql();
                 ->paginate(3);
         // }

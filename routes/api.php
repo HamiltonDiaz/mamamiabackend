@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->prefix('products')->group(function () {
 //Productos cliente
 Route::prefix('products-client')->group(function () {
     Route::get("/{id}",[ProductController::class,'singleProduct']);
-    Route::get("/listAll",[ProductController::class,'listProductsClient']);
+    Route::get("/listall/{linesid}",[ProductController::class,'listProductsClient']);
 });
 
 
