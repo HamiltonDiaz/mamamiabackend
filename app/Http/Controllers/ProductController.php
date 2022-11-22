@@ -301,14 +301,15 @@ class ProductController extends Controller
     }
 
 
-    public function listProductsClient($lineid)
+    public function listProductsClient(Request $request)
     {
-    
+
         $lines = Line::select("id", "name", "stateitem as linestate")->activeitems()->get();
+        $products=array();
         $success=true;
         $msg="";
     
-        if ($lineid>0){
+        // if ($request->linesid){
             $products = Product::select(
                 "products.*",
                 "sln.name as namesubline",
@@ -324,32 +325,12 @@ class ProductController extends Controller
                 ->where("products.stateitem", "=", "1")
                 ->where("ln.stateitem", "=", "1")
                 ->where("sln.stateitem", "=", "1")
-                ->where("ln.id", "=", $lineid)
+                // ->whereIn("ln.id", "=", $request->linesid)
+                ->whereIn("ln.id", "=", [0,1,2,3,4,5])
                 // ->toSql();
                 ->paginate(3);
-        }
-        if ($lineid==0){
-            //traer todos los productos sin importar la linea
-            $products = Product::select(
-                "products.*",
-                "sln.name as namesubline",
-                "sln.id as idsubline",
-                "ln.id as idline",
-                "ln.name as nameline",
-                "ln.stateitem as linestate",
-                "sln.stateitem as sublinestate",
-            )
-                ->orderBy("products.name","asc")
-                ->join("sub_lines as sln", "products.sublineid", "=", "sln.id")
-                ->join("lines as ln", "sln.lineid", "=", "ln.id")
-                ->where("products.stateitem", "=", "1")
-                ->where("ln.stateitem", "=", "1")
-                ->where("sln.stateitem", "=", "1")
-                ->paginate(3);
-        }
-
-
-
+        // }
+        
         if ($products==[]){
             $success=false;
         }
