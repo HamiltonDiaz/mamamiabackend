@@ -311,7 +311,7 @@ class ProductController extends Controller
                 // ->whereIn("ln.id", $request->linesid)
                 ->whereIn("ln.id", $criterios)
                 // ->toSql();
-                ->paginate(15);
+                ->paginate(12);
         // }
         
         if ($products==[]){
