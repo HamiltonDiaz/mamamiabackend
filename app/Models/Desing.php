@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 
-class Line extends Model
+class Desing extends Model
 {
     use  HasRoles, HasApiTokens, HasFactory, Notifiable;
     protected $fillable = [
@@ -18,7 +18,6 @@ class Line extends Model
         'image',
         'stateitem',
     ];
-
     public function scopeAllitems($query)
     {
         return $query->where('stateitem', '!=', 3);

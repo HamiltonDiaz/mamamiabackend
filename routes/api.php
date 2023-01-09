@@ -4,9 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LineController;
 use App\Http\Controllers\SubLineController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\DesingController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -51,10 +51,21 @@ Route::middleware('auth:sanctum')->prefix('products')->group(function () {
     Route::delete("/delete/{id}",[ProductController::class,'destroy']);
 
 });
+
+//Diseños
+Route::middleware('auth:sanctum')->prefix('desing')->group(function () {
+    Route::get("/",[DesingController::class,'index']);
+    Route::post("/create",[DesingController::class,'store']);
+    Route::post("/update",[DesingController::class,'update']);
+    Route::delete("/delete/{id}",[DesingController::class,'destroy']);
+});
+
+
 //Productos cliente
 Route::prefix('products-client')->group(function () {
     Route::get("/{id}",[ProductController::class,'singleProduct']);
     Route::get("/listall/{linesid}",[ProductController::class,'listProductsClient']);
 });
+
 
 
