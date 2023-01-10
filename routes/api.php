@@ -33,7 +33,11 @@ Route::middleware('auth:sanctum')->prefix('line')->group(function () {
     Route::post("/update",[LineController::class,'update']);
     Route::delete("/delete/{id}",[LineController::class,'destroy']);
 });
+
+//Rutas lineas usuarios publicos
 Route::get("/line/active",[LineController::class,'findActive']);
+Route::get("/line/home",[LineController::class,'lineHomeUser']);
+
 
 //sublineas
 Route::middleware('auth:sanctum')->prefix('sublines')->group(function () {

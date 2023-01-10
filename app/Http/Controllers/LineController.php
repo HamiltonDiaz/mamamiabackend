@@ -35,9 +35,14 @@ class LineController extends Controller
             "data"=>$lines,
         ],200);
     }
-    public function create()
+
+    public function lineHomeUser()
     {
-        //
+        $lines = Line::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->take(5)->get();
+        return response()->json([
+            'success'=>true,
+            "data"=>$lines,
+        ],200);
     }
 
     public function findByName($name){
@@ -116,17 +121,6 @@ class LineController extends Controller
                 "data"=>$line
             ]
         );
-    }
-
-
-    public function show(Line $line)
-    {
-        //
-    }
-
-    public function edit(Line $line)
-    {
-        //
     }
 
 
