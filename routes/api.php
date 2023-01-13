@@ -34,10 +34,6 @@ Route::middleware('auth:sanctum')->prefix('line')->group(function () {
     Route::delete("/delete/{id}",[LineController::class,'destroy']);
 });
 
-//Rutas lineas usuarios publicos
-Route::get("/line/active",[LineController::class,'findActive']);
-Route::get("/line/home",[LineController::class,'lineHomeUser']);
-
 
 //sublineas
 Route::middleware('auth:sanctum')->prefix('sublines')->group(function () {
@@ -67,9 +63,15 @@ Route::middleware('auth:sanctum')->prefix('desing')->group(function () {
 
 //Productos cliente
 Route::prefix('products-client')->group(function () {
+    Route::get("/line/active",[LineController::class,'findActive']);
     Route::get("/{id}",[ProductController::class,'singleProduct']);
     Route::get("/listall/{linesid}",[ProductController::class,'listProductsClient']);
+    Route::get("/line/home",[LineController::class,'lineHomeUser']);
 });
+
+
+
+
 
 
 

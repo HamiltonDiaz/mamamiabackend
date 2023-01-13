@@ -281,14 +281,27 @@ class ProductController extends Controller
     public function listProductsClient($linesid)
     {
         // dd($linesid);
-        $lines = Line::select("id", "name", "stateitem as linestate")->activeitems()->get()->toArray();
+        $lines = Line::select("id", "name", "stateitem as linestate")
+                    ->activeitems()
+                    ->orderBy("name","asc")
+                    ->get()
+                    ->toArray();
+        $sublines= SubLine::select("*")
+                    ->activeitems()
+                    ->orderBy("lineid","asc")
+                    ->orderBy("name","asc")
+                    ->get()
+                    ->toArray();
         $products=array();
         $criterios=explode(",",$linesid);
+
         if ($criterios==[0]){
-            foreach($lines as $ln){
-                array_push($criterios, $ln["id"]);
+            //Si el parametro es 0 se deben agregar todas las sublineas
+            foreach($sublines as $sln){
+                array_push($criterios, $sln["id"]);
             }
-        }        
+        }
+        
         $success=true;
         $msg="";
     
@@ -309,7 +322,8 @@ class ProductController extends Controller
                 ->where("ln.stateitem", "=", "1")
                 ->where("sln.stateitem", "=", "1")
                 // ->whereIn("ln.id", $request->linesid)
-                ->whereIn("ln.id", $criterios)
+                //->whereIn("ln.id", $criterios)//para filtrar por linea
+                ->whereIn("sln.id", $criterios)//filtrar por sublineas
                 // ->toSql();
                 ->paginate(12);
         // }
@@ -322,7 +336,7 @@ class ProductController extends Controller
             [
                 "success" => $success,
                 "msg" => $msg,
-                "data" => ["products" => $products, "lines" => $lines]
+                "data" => ["products" => $products, "lines" => $lines, "sublines"=>$sublines]
             ]
         );
     }
