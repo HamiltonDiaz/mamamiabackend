@@ -71,6 +71,7 @@ Route::prefix('products-client')->group(function () {
     Route::get("/subline/home",[SubLineController::class,'sublineHomeUser']);
     Route::get("/desing/home",[DesingController::class,'desingHomeUser']);
     Route::get("/desing/alldesings",[DesingController::class,'allDesingUser']);
+    Route::get("/desing/{id}",[DesingController::class,'singleDesing']);
     
 
 });

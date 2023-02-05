@@ -30,8 +30,7 @@ class DesingController extends Controller
     }
 
     public function allDesingUser()
-    {
-        
+    {        
         $lines = Desing::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->get();
         return response()->json([
             'success'=>true,
@@ -188,4 +187,24 @@ class DesingController extends Controller
             ]
         );
     }
+    public function singleDesing($id)
+    {
+        $msg = "";
+        $success = true;
+        if ($id) {
+            $product = Desing::select("*")->whereId($id)->activeitems()->get()->first();
+            // dd($product);
+        } else {
+            $success = false;
+            $msg = "¡Registro no encontrado!";
+        }
+        return response()->json(
+            [
+                "success" => $success,
+                "msg" => $msg,
+                "data" => $product
+            ]
+        );
+    }
+
 }
