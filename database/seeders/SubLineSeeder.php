@@ -15,38 +15,53 @@ class SubLineSeeder extends Seeder
      */
     public function run()
     {
-        $subline = SubLine::create([
-            'name' => "Camisetas Niños",
-            'descrip' => "Prenda de vestir para toda la familia",
-            'image' => "imglinecamiseta.png",
-            'stateitem' => 1,
-            'lineid'=>2,
-        ]);
-
-        $subline2 = SubLine::create([
-            'name' => "Camisetas Niñas",
-            'descrip' => "Prenda de vestir para toda la familia",
-            'image' => "imglinecamiseta.png",
+        SubLine::create([
+            'name' => "Camisetas Infantiles",
+            'descrip' => "",
+            'image' => "SL_CamisetasInfantil.jpeg",
             'stateitem' => 1,
             'lineid'=>1,
         ]);
 
-        $subline3 = SubLine::create([
-            'name' => "Camisetas Mujer",
-            'descrip' => "Prenda de vestir para toda la familia",
-            'image' => "imglinecamiseta.png",
+        SubLine::create([
+            'name' => "Camisetas Damas",
+            'descrip' => "",
+            'image' => "SL_CamisetasIDama.jpeg",
+            'stateitem' => 1,
+            'lineid'=>1,
+        ]);
+
+        SubLine::create([
+            'name' => "Camisetas Hombre",
+            'descrip' => "",
+            'image' => "SL_CamisetasIHombre.jpeg",
+            'stateitem' => 1,
+            'lineid'=>1,
+        ]);    
+
+        SubLine::create([
+            'name' => "Camisetas Unisex",
+            'descrip' => "",
+            'image' => "SL_CamisetasIHombre.jpeg",
             'stateitem' => 1,
             'lineid'=>1,
         ]);    
         
-        $subline4 = SubLine::create([
-            'name' => "Camisetas Hombre",
-            'descrip' => "Prenda de vestir para toda la familia",
-            'image' => "imglinecamiseta.png",
+        SubLine::create([
+            'name' => "Pijamas Dama",
+            'descrip' => "SL_CamisetasIHombre.jpeg",
+            'image' => "",
             'stateitem' => 1,
-            'lineid'=>1,
+            'lineid'=>2,
         ]);        
 
+        SubLine::create([
+            'name' => "Gorras",
+            'descrip' => "",
+            'image' => "SL_Gorras.jpeg",
+            'stateitem' => 1,
+            'lineid'=>3,
+        ]);        
 
         // $subline->save();
         // $subline2->save();

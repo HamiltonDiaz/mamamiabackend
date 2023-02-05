@@ -24,10 +24,15 @@ class SubLineController extends Controller
         ],200);
     }
 
-    public function create()
+    public function sublineHomeUser()
     {
-        //
+        $lines = SubLine::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->take(5)->get();
+        return response()->json([
+            'success'=>true,
+            "data"=>$lines,
+        ],200);
     }
+
     private function findDuplicateItem($name,$idsln){
         $findname= SubLine::where([
             ["name", $name], 
@@ -104,16 +109,6 @@ class SubLineController extends Controller
                 "data"=>$registro
             ]
         );
-    }
-
-    public function show(SubLine $subLine)
-    {
-        //
-    }
-
-    public function edit(SubLine $subLine)
-    {
-        //
     }
 
     public function update(Request $request)

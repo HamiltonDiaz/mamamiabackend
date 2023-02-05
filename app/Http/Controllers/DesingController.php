@@ -19,6 +19,26 @@ class DesingController extends Controller
         ],200);
     }
 
+
+    public function desingHomeUser()
+    {
+        $lines = Desing::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->take(5)->get();
+        return response()->json([
+            'success'=>true,
+            "data"=>$lines,
+        ],200);
+    }
+
+    public function allDesingUser()
+    {
+        
+        $lines = Desing::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->get();
+        return response()->json([
+            'success'=>true,
+            "data"=>$lines,
+        ],200);
+    }
+
     public function findActive()
     {
         $desings = Desing::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->get();
@@ -37,10 +57,6 @@ class DesingController extends Controller
 
     public function store(Request $request)
     {
-        
-        
-        print($request->input('name'));
-        
         //valida que no esté duplicada la linea
         if ($this->findByName($request->input('name'))) {
             $alertType = "error";

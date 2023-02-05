@@ -16,16 +16,16 @@ class DesingSeeder extends Seeder
     public function run()
     {
         Desing::create([
-            'name' => "Primer diseño",
-            'descrip' => "Descripción Primer Diseño",
-            'image' => "imglinecamiseta.png",
+            'name' => "Ciao, bambino",
+            'descrip' => "Nuestra primera colección para bambinos y bambinas fue diseña para alegrar el look de los niños con los animalitos de la selva que tanto les gusta.",
+            'image' => "Ciao, Bambino.jpeg",
             'stateitem' => 1,
         ]);
 
         Desing::create([
-            'name' => "Segundo diseño",
-            'descrip' => "Descripción segundo Diseño",
-            'image' => "imglinecamiseta.png",
+            'name' => "Coffe time",
+            'descrip' => "Un diseño original para los amantes del café.",
+            'image' => "Coffe time.jpeg",
             'stateitem' => 1,
         ]);
     }

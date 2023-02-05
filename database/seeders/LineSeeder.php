@@ -17,14 +17,21 @@ class LineSeeder extends Seeder
     {
         Line::create([
             'name' => "Camisetas",
-            'descrip' => "Prenda de vestir para toda la familia",
+            'descrip' => "Descripción camisetas",
             'image' => "imglinecamiseta.png",
             'stateitem' => 1,
         ]);
 
         Line::create([
-            'name' => "Vasos",
-            'descrip' => "Utensilios personalizados  para toda la familia",
+            'name' => "Pijamas",
+            'descrip' => "Descripción pijamas",
+            'image' => "imglinecamiseta.png",
+            'stateitem' => 1,
+        ]);
+
+        Line::create([
+            'name' => "Gorras",
+            'descrip' => "Descripción Gorras",
             'image' => "imglinecamiseta.png",
             'stateitem' => 1,
         ]);

@@ -63,10 +63,16 @@ Route::middleware('auth:sanctum')->prefix('desing')->group(function () {
 
 //Productos cliente
 Route::prefix('products-client')->group(function () {
+    
     Route::get("/line/active",[LineController::class,'findActive']);
     Route::get("/{id}",[ProductController::class,'singleProduct']);
     Route::get("/listall/{linesid}",[ProductController::class,'listProductsClient']);
-    Route::get("/line/home",[LineController::class,'lineHomeUser']);
+    //Route::get("/line/home",[LineController::class,'lineHomeUser']);
+    Route::get("/subline/home",[SubLineController::class,'sublineHomeUser']);
+    Route::get("/desing/home",[DesingController::class,'desingHomeUser']);
+    Route::get("/desing/alldesings",[DesingController::class,'allDesingUser']);
+    
+
 });
 
 
