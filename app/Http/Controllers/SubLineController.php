@@ -26,7 +26,7 @@ class SubLineController extends Controller
 
     public function sublineHomeUser()
     {
-        $lines = SubLine::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->take(5)->get();
+        $lines = SubLine::select("id", "name", "descrip", "image")->orderBy("name", "asc")->activeitems()->take(8)->get();
         return response()->json([
             'success'=>true,
             "data"=>$lines,

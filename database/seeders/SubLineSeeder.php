@@ -49,8 +49,8 @@ class SubLineSeeder extends Seeder
         
         SubLine::create([
             'name' => "Pijamas Dama",
-            'descrip' => "SL_CamisetasIHombre.jpeg",
-            'image' => "",
+            'descrip' => "",
+            'image' => "Natural sweet.jpeg",
             'stateitem' => 1,
             'lineid'=>2,
         ]);        
